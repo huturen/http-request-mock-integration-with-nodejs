@@ -1,4 +1,4 @@
-# http-request-mock-with-nodejs
+# http-request-mock-integration-with-nodejs
 
 ## Project setup
 ```
