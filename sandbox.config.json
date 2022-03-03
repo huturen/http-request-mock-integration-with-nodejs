@@ -1,0 +1,13 @@
+{
+  "infiniteLoopProtection": true,
+  "hardReloadOnChange": false,
+  "view": "browser",
+  "server": "true",
+  "container": {
+    "startScript": "mock-dev",
+    "port": 3000,
+    "node": "14"
+  },
+  "template": "node",
+  "node": "14"
+}

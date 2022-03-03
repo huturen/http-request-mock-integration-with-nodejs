@@ -1,0 +1,23 @@
+syntax = "proto3";
+package proto_messages;
+
+message Request {
+}
+
+message Record {
+  uint32 id    = 1;
+  string name  = 2;
+  uint32 age   = 3;
+  string email = 4;
+}
+
+message Result {
+  uint32 code = 1;
+  string msg  = 2;
+  Record data = 3;
+}
+
+service Api {
+  rpc getResult (Request) returns (Result);
+}
+
