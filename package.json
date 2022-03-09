@@ -16,7 +16,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
     "babel-jest": "^27.4.6",
-    "http-request-mock": "^1.5.11",
+    "http-request-mock": "^1.6.6",
     "jest": "^27.4.7",
     "nodemon": "^2.0.12"
   },

@@ -2,7 +2,7 @@ require('./mock/.runtime.js');
 const Koa = require('koa');
 const axios = require('axios');
 const app = new Koa();
-const { port, template: tpl, url2mockDefinition } = require('./config');
+const { port, tpl, url2mock, statics } = require('./config');
 
 const request = async (url) => {
   const now = Date.now();
@@ -20,32 +20,47 @@ const request = async (url) => {
   return [spent, headers, result];
 };
 
+
+
 app.use(async ctx => {
-  const urls = Object.keys(url2mockDefinition);
-  let body = tpl;
+  if (isStatic(ctx)) return;
+  if (isIndex(ctx)) return;
 
-  const links = urls.map(url => `<a href="${url}">${url}</a>`);
-  body = body.replace('__all_links__', links.join('\n'));
-
-  if (ctx.request.path === '/') {
-    body = body.replace('__mock_definitions__', '');
-    body = body.replace('__request_result__', '');
-    return (ctx.body = body);
-  }
-
-  const key = urls.find(url => ctx.request.url === url);
-  if (!key) {
-    ctx.body = 'Not Found.';
-    return (ctx.status = 404);
-  }
+  const mockFile = url2mock[ctx.request.url];
+  if (!mockFile) return (ctx.status = 404);
 
   const [spent, headers, result] = await request(ctx.request.url);
-  body = body.replace('__mock_definitions__', url2mockDefinition[key]);
-  body = body.replace('__request_result__', result);
-  body = body.replace('Spent: -', `Spent: ${spent}ms`);
-  body = body.replace('Response Headers: -', `Response Headers: ${headers}`);
-  ctx.body = body
+
+  ctx.body = tpl
+    .replace('__mock_definitions__', mockFile)
+    .replace('__request_result__', result)
+    .replace('Spent: -', `Spent: ${spent}ms`)
+    .replace('Response Headers: -', `Response Headers: ${headers}`);
 });
 
 app.listen(port);
 console.log(`Listion at: http://localhost:${port}`);
+
+function isIndex(ctx) {
+  if (ctx.request.url === '/') {
+    ctx.body = tpl
+      .replace('__mock_definitions__', '')
+      .replace('__request_result__', '');
+    return true;
+  }
+  return false;
+}
+
+
+function isStatic(ctx) {
+  if (statics[ctx.request.url]) {
+    if (/\.css$/.test(ctx.request.url)) {
+      ctx.set('Content-Type', 'text/css; charset=utf-8');
+    } else if (/\.js/.test(ctx.request.url)) {
+      ctx.set('Content-Type', 'text/javascript; charset=utf-8');
+    }
+    ctx.body = statics[ctx.request.url]
+    return true;
+  }
+  return false;
+}
