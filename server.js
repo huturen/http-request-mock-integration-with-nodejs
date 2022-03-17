@@ -1,7 +1,9 @@
 require('./mock/.runtime.js');
 const Koa = require('koa');
 const axios = require('axios');
+const Router = require('koa-router');
 const app = new Koa();
+const router = new Router();
 const { port, tpl, url2mock, statics } = require('./config');
 
 const request = async (url) => {
@@ -20,47 +22,36 @@ const request = async (url) => {
   return [spent, headers, result];
 };
 
+// Set up your controllers
+router.get('/', ctx => render(ctx, {}));
 
-
-app.use(async ctx => {
-  if (isStatic(ctx)) return;
-  if (isIndex(ctx)) return;
-
-  const mockFile = url2mock[ctx.request.url];
-  if (!mockFile) return (ctx.status = 404);
-
-  const [spent, headers, result] = await request(ctx.request.url);
-
-  ctx.body = tpl
-    .replace('__mock_definitions__', mockFile)
-    .replace('__request_result__', result)
-    .replace('Spent: -', `Spent: ${spent}ms`)
-    .replace('Response Headers: -', `Response Headers: ${headers}`);
+router.get('/default.min.css', ctx => {
+  ctx.set('Content-Type', 'text/css; charset=utf-8');
+  ctx.body = statics['/default.min.css'];
 });
 
+router.get('/highlight.min.js', ctx => {
+  ctx.set('Content-Type', 'text/javascript; charset=utf-8');
+  ctx.body = statics['/highlight.min.js'];
+});
+
+for(const [url, mockData] of Object.entries(url2mock)) {
+  router.get(url, async ctx => {
+    const [spent, headers, result] = await request(ctx.request.url);
+
+    render(ctx, { mockData, result, spent, headers });
+  });
+}
+
+app.use(router.routes()).use(router.allowedMethods());
 app.listen(port);
 console.log(`Listion at: http://localhost:${port}`);
 
-function isIndex(ctx) {
-  if (ctx.request.url === '/') {
-    ctx.body = tpl
-      .replace('__mock_definitions__', '')
-      .replace('__request_result__', '');
-    return true;
-  }
-  return false;
-}
 
-
-function isStatic(ctx) {
-  if (statics[ctx.request.url]) {
-    if (/\.css$/.test(ctx.request.url)) {
-      ctx.set('Content-Type', 'text/css; charset=utf-8');
-    } else if (/\.js/.test(ctx.request.url)) {
-      ctx.set('Content-Type', 'text/javascript; charset=utf-8');
-    }
-    ctx.body = statics[ctx.request.url]
-    return true;
-  }
-  return false;
+function render(ctx, data = {}) {
+  ctx.body = tpl
+    .replace('__mock_definitions__', data.mockData || '')
+    .replace('__request_result__', data.result || '')
+    .replace('Spent: -', `Spent: ${data.spent || ''}`)
+    .replace('Response Headers: -', `Response Headers: ${data.headers || ''}`);
 }
