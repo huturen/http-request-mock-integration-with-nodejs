@@ -1,6 +1,7 @@
 /**
  * @url https://jsonplaceholder.typicode.com/dynamic
  * @header content-type: application/json
+ * @proxy
  * @method get
  */
 const faker = require('http-request-mock/plugin/faker.js');

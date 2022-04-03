@@ -11,10 +11,13 @@ const request = async (url) => {
   let result = '';
   let headers = '';
   try {
-    const res = await axios.get('https://jsonplaceholder.typicode.com' + url);
+    const res = await axios.get('https://jsonplaceholder.typicode.com' + url, {
+      proxy: false,
+    });
     result = JSON.stringify(res.data, null, 2);
     headers = JSON.stringify(res.headers, null, 2);
   } catch(err) {
+    console.log('axios.get err:', err.stack)
     result = err.message;
     headers = '-';
   }

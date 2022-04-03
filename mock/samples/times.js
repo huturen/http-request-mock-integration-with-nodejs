@@ -6,6 +6,7 @@
  */
 const faker = require('http-request-mock/plugin/faker.js');
 let times = 10;
+
 module.exports = () => ({
   id: faker.incrementId(),
   name: faker.name(),
