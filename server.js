@@ -26,7 +26,7 @@ const request = async (url) => {
 };
 
 // Set up your controllers
-router.get('/', ctx => render(ctx, {}));
+router.get('/', ctx => ctx.redirect('/dynamic'));
 
 router.get('/default.min.css', ctx => {
   ctx.set('Content-Type', 'text/css; charset=utf-8');
