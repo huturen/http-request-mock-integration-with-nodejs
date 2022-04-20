@@ -2,7 +2,7 @@
 let mocker;
 
 if (process.env.NODE_ENV === "development") {
-  const HttpRequestMock = require("http-request-mock");
+  const HttpRequestMock = require("http-request-mock/src/index.js");
   mocker = HttpRequestMock.setup();
   mocker.mock({
     "url": "/getResult",
