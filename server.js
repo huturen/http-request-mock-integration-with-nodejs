@@ -17,7 +17,7 @@ const request = async (url) => {
     result = JSON.stringify(res.data, null, 2);
     headers = JSON.stringify(res.headers, null, 2);
   } catch(err) {
-    console.log('axios.get err:', err.stack)
+    console.log('axios.get err:', url, '\n', err.stack)
     result = err.message;
     headers = '-';
   }

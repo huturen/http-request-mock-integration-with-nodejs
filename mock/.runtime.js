@@ -58,6 +58,12 @@ if (process.env.NODE_ENV === "development") {
     "status": 404
   });
   mocker.mock({
+    "url": "https://jsonplaceholder.typicode.com/remote",
+    "method": "GET",
+    "body": require('./samples/remote.js'),
+    "remote": "http://jsonplaceholder.typicode.com/posts/1?a=1"
+  });
+  mocker.mock({
     "url": "https://jsonplaceholder.typicode.com/request-info",
     "method": "GET",
     "body": require('./samples/request.js'),

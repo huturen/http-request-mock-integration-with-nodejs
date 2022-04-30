@@ -16,6 +16,7 @@ module.exports = {
     '/photos/1': fs.readFileSync('./mock/samples/bypass.js', utf8),
     '/header': fs.readFileSync('./mock/samples/header.js', utf8),
     '/request-info': fs.readFileSync('./mock/samples/request.js', utf8),
+    '/remote': fs.readFileSync('./mock/samples/remote.js', utf8),
   },
 
   statics: {
