@@ -1,6 +1,6 @@
 /**
  * @url https://jsonplaceholder.typicode.com/request-info
- * @method get
+ * @method any
  * @header application: application/json
  */
 module.exports = (request) => {

@@ -30,8 +30,7 @@ if (process.env.NODE_ENV === "development") {
     "body": require('./samples/dynamic.js'),
     "header": {
       "content-type": "application/json"
-    },
-    "proxy": true
+    }
   });
   mocker.mock({
     "url": "https://jsonplaceholder.typicode.com/faker",
@@ -65,7 +64,6 @@ if (process.env.NODE_ENV === "development") {
   });
   mocker.mock({
     "url": "https://jsonplaceholder.typicode.com/request-info",
-    "method": "GET",
     "body": require('./samples/request.js'),
     "header": {
       "application": "application/json"

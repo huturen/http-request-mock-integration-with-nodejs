@@ -4,7 +4,7 @@
  * @method get
  */
 module.exports = function (remote) {
-  console.log('remote response:', remote);
+  // console.log('remote response:', remote);
   return {
     code: 0,
     msg: 'ok',
